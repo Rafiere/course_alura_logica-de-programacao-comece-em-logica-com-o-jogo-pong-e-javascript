@@ -21,6 +21,21 @@ let constYRacketPlayer = 150;
 let widthRacketPlayer = 10;
 let heightRacketPlayer = 90;
 
+//Opponent racket positions and measurements
+let constXRacketOpponent = 585;
+let constYRacketOpponent = 150;
+let widthRacketOpponent = 10;
+let heightRacketOpponent = 90;
+
+let velocityYOpponent;
+
+//collide2D variables.
+let isCollidedPlayer = false;
+
+//Game score variables
+let myPoints = 0;
+let opponentPoints = 0;
+
 
 function setup() {
   createCanvas(600, 400);
@@ -30,12 +45,23 @@ function draw() {
   background(0);
   
   drawCircle();
-  drawRacket();
+  
+  includeGameScore();
+  setPoint();
+  
+  drawRacket(constXRacketPlayer, constYRacketPlayer, widthRacketPlayer, heightRacketPlayer);
+  
+  drawRacket(constXRacketOpponent, constYRacketOpponent, widthRacketOpponent, heightRacketOpponent);
+  
   moveBall();
   verifyEdgeCollision();
   
   moveRacketPlayer();
-  verifyRacketPlayerCollision();
+  moveRacketOpponent();
+  
+  verifyRacketCollisionCollide2D(constXRacketPlayer, constYRacketPlayer, widthRacketPlayer, heightRacketPlayer);
+  
+    verifyRacketCollisionCollide2D(constXRacketOpponent, constYRacketOpponent, widthRacketOpponent, heightRacketOpponent);
 }
 
   
@@ -43,11 +69,13 @@ function draw() {
     circle(constXCircle, constYCircle, diameterCircle)
   }
 
-  function drawRacket(){
+  function drawRacket(constXRacket, constYRacket, widthRacket, heightRacket){
     
+    rect(constXRacket, constYRacket, widthRacket, heightRacket)
+  }
 
-    
-    rect(constXRacketPlayer, constYRacketPlayer, widthRacketPlayer, heightRacketPlayer)
+  function drawOpponentRacket(){
+        rect(constXRacketOpponent, constYRacketOpponent, widthRacketPlayer, heightRacketPlayer)
   }
   
   function moveBall(){
@@ -84,11 +112,35 @@ function moveRacketPlayer(){
   }
 }
 
-function verifyRacketPlayerCollision(){
-  if(constXCircle - radius < constXRacketPlayer + widthRacketPlayer && 
-     constYCircle - radius < constYRacketPlayer + heightRacketPlayer && 
-    constYCircle + radius > constYRacketPlayer){
-    
+function moveRacketOpponent(){
+  velocityYOpponent = constYCircle - constYRacketOpponent - widthRacketOpponent / 2 - 30;
+  
+  constYRacketOpponent += velocityYOpponent;
+}
+
+function verifyRacketCollisionCollide2D(constXRacket, constYRacket, widthRacket, heightRacket){
+  
+  isCollided = collideRectCircle(constXRacket, constYRacket, widthRacket, heightRacket, constXCircle, constYCircle, radius)
+  
+  if(isCollided){
     speedXCircle *= -1;
+  }
+}
+
+function includeGameScore(){
+  fill(255)
+  text(myPoints, 278, 26);
+  
+  fill(255)
+  text(opponentPoints, 321, 26);
+}
+
+function setPoint(){
+  if(constXCircle > 590){
+    myPoints += 1;
+  }
+  
+  if(constXCircle < 10){
+    opponentPoints += 1;
   }
 }
