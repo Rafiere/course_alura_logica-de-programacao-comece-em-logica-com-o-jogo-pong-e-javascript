@@ -12,7 +12,15 @@ let diameterCircle = 15;
 let speedXCircle = 6;
 let speedYCircle = 6;
 
+//Ball radius
 let radius = diameterCircle / 2;
+
+//Player racket positions and measurements
+let constXRacketPlayer = 5;
+let constYRacketPlayer = 150;
+let widthRacketPlayer = 10;
+let heightRacketPlayer = 90;
+
 
 function setup() {
   createCanvas(600, 400);
@@ -22,13 +30,24 @@ function draw() {
   background(0);
   
   drawCircle();
+  drawRacket();
   moveBall();
   verifyEdgeCollision();
+  
+  moveRacketPlayer();
+  verifyRacketPlayerCollision();
 }
 
   
   function drawCircle(){
     circle(constXCircle, constYCircle, diameterCircle)
+  }
+
+  function drawRacket(){
+    
+
+    
+    rect(constXRacketPlayer, constYRacketPlayer, widthRacketPlayer, heightRacketPlayer)
   }
   
   function moveBall(){
@@ -54,5 +73,22 @@ function draw() {
     if(constYCircle + radius > height || constYCircle - radius < 0){
       speedYCircle *= -1;
     }
-  
+}
+
+function moveRacketPlayer(){
+  if(keyIsDown(UP_ARROW)){
+    constYRacketPlayer -= 10;
+  }
+    if(keyIsDown(DOWN_ARROW)){
+    constYRacketPlayer += 10;
+  }
+}
+
+function verifyRacketPlayerCollision(){
+  if(constXCircle - radius < constXRacketPlayer + widthRacketPlayer && 
+     constYCircle - radius < constYRacketPlayer + heightRacketPlayer && 
+    constYCircle + radius > constYRacketPlayer){
+    
+    speedXCircle *= -1;
+  }
 }
